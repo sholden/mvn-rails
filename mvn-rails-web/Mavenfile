@@ -1,0 +1,15 @@
+gemfile
+
+jarfile
+
+group_id "com.mvnrails"
+artifact_id "mvn-rails-web"
+version "1.0-SNAPSHOT"
+packaging "war"
+
+name "mvn-rails-web"
+description "A demo rails app using maven dependencies"
+
+parent "com.mvnrails:mvn-rails", "1.0-SNAPSHOT"
+
+properties( 'tesla.dump.pom' => 'pom.xml' )

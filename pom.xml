@@ -1,0 +1,94 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.mvnrails</groupId>
+    <artifactId>mvn-rails</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>Multi-Project Rails Site</name>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <modules>
+        <module>mvn-rails-web</module>
+        <module>mvn-rails-java</module>
+    </modules>
+
+    <properties>
+        <version.jruby-maven-plugins>1.0.0-rc</version.jruby-maven-plugins>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jruby.version>1.7.20</jruby.version>
+        <!-- prereleased gems ARE snapshots -->
+        <!--<warbler.version>1.4.5.dev-SNAPSHOT</warbler.version>-->
+        <!--<gem.home>${session.executionRootDirectory}/target/rubygems</gem.home>-->
+        <!--<gem.path>${session.executionRootDirectory}/target/rubygems</gem.path>-->
+    </properties>
+
+    <!--<repositories>-->
+        <!--<repository>-->
+            <!--<id>rubygems-releases</id>-->
+            <!--<url>http://rubygems-proxy.torquebox.org/releases</url>-->
+        <!--</repository>-->
+    <!--</repositories>-->
+
+    <!-- -->
+
+    <!--<build>-->
+        <!--<pluginManagement>-->
+            <!--<plugins>-->
+                <!--<plugin>-->
+                    <!--<groupId>org.apache.maven.plugins</groupId>-->
+                    <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                    <!--<configuration>-->
+                        <!--<source>1.7</source>-->
+                        <!--<target>1.7</target>-->
+                    <!--</configuration>-->
+                <!--</plugin>-->
+                <!--<plugin>-->
+                    <!--<groupId>org.codehaus.mojo</groupId>-->
+                    <!--<artifactId>exec-maven-plugin</artifactId>-->
+                    <!--<version>1.2.1</version>-->
+                <!--</plugin>-->
+                <!--&lt;!&ndash;<plugin>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<groupId>de.saumya.mojo</groupId>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<artifactId>jruby-maven-plugin</artifactId>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<version>${version.jruby-maven-plugins}</version>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<gemHome>${gem.home}</gemHome>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<jrubySwitches>&#45;&#45;1.9</jrubySwitches>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<jrubyVersion>${jruby.version}</jrubyVersion>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<executions>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<execution>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<id>bundle-install</id>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<goals><goal>jruby</goal></goals>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<args>-C ${basedir}/src/main/ruby -S ${gem.home}/bin/bundle install</args>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</execution>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<execution>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<id>create-war</id>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<goals><goal>jruby</goal></goals>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
+                                <!--&lt;!&ndash;<args>-C ${basedir}/src/main/ruby -S ${gem.home}/bin/warble</args>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</execution>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</executions>&ndash;&gt;-->
+                <!--&lt;!&ndash;</plugin>&ndash;&gt;-->
+            <!--</plugins>-->
+        <!--</pluginManagement>-->
+    <!--</build>-->
+
+</project>
