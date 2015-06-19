@@ -12,3 +12,4 @@
 /mvn-rails-web/log/*
 !/mvn-rails-web/log/.keep
 /mvn-rails-web/tmp
+target/

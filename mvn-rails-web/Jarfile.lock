@@ -1,0 +1,3 @@
+---
+:runtime:
+- com.mvnrails:mvn-rails-java:jar:1.0-SNAPSHOT
