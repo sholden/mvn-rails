@@ -2,7 +2,6 @@ jruby_version = `jruby --version`[/[\d\.]+/]
 
 project 'mvn-rails', 'https://github.com/sholden/mvn-rails' do
   model_version '4.0.0'
-  inception_year '2015'
   id 'com.mvnrails:mvn-rails', '1.0-SNAPSHOT'
   packaging 'pom'
 
@@ -10,322 +9,51 @@ project 'mvn-rails', 'https://github.com/sholden/mvn-rails' do
 
   issue_management 'https://github.com/sholden/mvn-rails/issues', 'GitHub'
 
-  plugin_repository( :url => 'https://oss.sonatype.org/content/repositories/snapshots/',
-                     :id => 'sonatype' ) do
-    releases 'false'
-    snapshots 'true'
-  end
+  repository( :id => 'rubygems-releases',
+              :url => 'http://rubygems-proxy.torquebox.org/releases' )
 
-  repository( :url => 'https://oss.sonatype.org/content/repositories/snapshots/',
-              :id => 'sonatype' ) do
-    releases 'false'
-    snapshots 'true'
-  end
-
-  properties( 'its.j2ee' => 'j2ee*/pom.xml',
-              'its.osgi' => 'osgi*/pom.xml',
-              'rspec-core.version' => '2.14.2',
-              'minitest.version' => '5.4.1',
-              'ant.version' => '1.9.2',
-              'diff-lcs.version' => '1.1.3',
-              'jffi.version' => '1.2.9',
-              'rake.version' => '10.1.0',
-              'project.build.sourceEncoding' => 'utf-8',
-              'jruby-launcher.version' => '1.1.1',
-              'asm.version' => '5.0.3',
-              'rspec-expectations.version' => '2.14.0',
-              'base.javac.version' => '1.7',
-              'krypt.version' => '0.0.2.rc1',
-              'rdoc.version' => '4.1.0',
-              'polyglot.dump.pom' => 'pom.xml',
-              'rspec.version' => '2.14.1',
-              'base.java.version' => '1.7',
-              'polyglot.dump.readonly' => 'true',
-              'rspec-mocks.version' => '2.14.1',
-              'jruby.plugins.version' => '1.0.9',
-              'invoker.skip' => 'true',
-              'json.version' => '1.8.0',
-              'version.jruby' => jruby_version,
-              'bouncy-castle.version' => '1.47',
-              'github.global.server' => 'github',
-              'main.basedir' => '${project.basedir}',
-              'joda.time.version' => '2.5',
-              'test-unit.version' => '3.0.3',
-              'power_assert.version' => '0.2.3' )
+  properties('jruby.plugins.version' => '1.0.9',
+             'jruby.version' => '1.7.20',
+             'gem.home' => '${session.executionRootDirectory}/target/rubygems',
+             'gem.path' => '${session.executionRootDirectory}/target/rubygems')
 
   modules [ 'mvn-rails-java', 'mvn-rails-web' ]
 
-  plugin_management do
-    jar( 'junit:junit:4.11',
-         :scope => 'test' )
+  overrides do
+    plugin( :compiler,
+            'source' =>  '1.8',
+            'target' =>  '1.8' )
+    #
+    # plugin( 'org.mortbay.jetty:maven-jetty-plugin:6.1.26',
+    #         'webApp' =>  'target/test.war',
+    #         'stopPort' =>  '9966',
+    #         'stopKey' =>  'warbler_stop' ) do
+    #   execute_goals( 'run-war',
+    #                  :id => 'start-jetty',
+    #                  :phase => 'pre-integration-test',
+    #                  'scanIntervalSeconds' =>  '0',
+    #                  'daemon' =>  'true' )
+    #   execute_goals( 'stop',
+    #                  :id => 'stop-jetty',
+    #                  :phase => 'post-integration-test' )
+    # end
 
-    # plugin( 'org.apache.felix:maven-bundle-plugin:2.4.0',
-    #         'instructions' => {
-    #             'Export-Package' =>  'org.jruby.*;version=${project.version}',
-    #             'Import-Package' =>  '!org.jruby.*, *;resolution:=optional',
-    #             'Private-Package' =>  'org.jruby.*,jnr.*,com.kenai.*,com.martiansoftware.*,jay.*,jline.*,jni.*,org.fusesource.*,org.jcodings.*,org.joda.convert.*,org.joda.time.*,org.joni.*,org.yaml.*,org.yecht.*,tables.*,org.objectweb.*,com.headius.*,org.bouncycastle.*,com.jcraft.jzlib,.',
-    #             'Bundle-Name' =>  '${bundle.name} ${project.version}',
-    #             'Bundle-Description' =>  '${bundle.name} ${project.version} OSGi bundle',
-    #             'Bundle-SymbolicName' =>  '${bundle.symbolic_name}'
-    #         } ) do
-    #   execute_goals( 'manifest',
-    #                  :phase => 'prepare-package' )
+    plugin 'org.codehaus.mojo:exec-maven-plugin:1.2.1'
+
+    plugin( 'de.saumya.mojo:jruby-maven-plugin:${jruby.plugins.version}') do
+      configuration(
+              'gemHome' =>  '${gem.home}',
+              'jrubySwitches' =>  '--2.0',
+              'jrubyVersion' =>  '${jruby.version}' )
+      execute_goals( 'jruby',
+                     :id => 'bundle-install',
+                     'args' =>  '-C ${basedir}/src/main/ruby -S ${gem.home}/bin/bundle install' )
+
     end
-
-    # plugin( :site, '3.3', 'skipDeploy' =>  'true' )
-    # plugin 'org.codehaus.mojo:build-helper-maven-plugin:1.8'
-    # plugin 'org.codehaus.mojo:exec-maven-plugin:1.2.1'
-    # plugin :antrun, '1.7'
-    # plugin :source, '2.1.2'
-    # plugin :assembly, '2.4'
-    # plugin :install, '2.4'
-    # plugin :deploy, '2.7'
-    # plugin :resources, '2.6'
-    # plugin :clean, '2.5'
-    # plugin :dependency, '2.8'
-    # plugin :release, '2.4.1'
-    # plugin :jar, '2.4' do
-    #   jar 'org.codehaus.plexus:plexus-io:2.0.5'
-    # end
-
-    # unless model.version =~ /-SNAPSHOT/
-    #   plugin :enforcer, '1.4' do
-    #     execute_goal :enforce, :rules => {
-    #                              :requireReleaseDeps => {
-    #                                  :message => 'No Snapshots Allowed!'
-    #                              } }
-    #   end
-    # end
-
-    # plugin :compiler, '3.1'
-    # plugin :shade, '2.1'
-    # plugin :surefire, '2.15'
-    # plugin :plugin, '3.2'
-    # plugin( :invoker, '1.8',
-    #         'settingsFile' =>  '${basedir}/src/it/settings.xml',
-    #         'localRepositoryPath' =>  '${project.build.directory}/local-repo',
-    #         'properties' => { 'project.version' => '${project.version}' },
-    #         'pomIncludes' => [ '*/pom.xml' ],
-    #         'pomExcludes' => [ 'extended/pom.xml', '${its.j2ee}', '${its.osgi}' ],
-    #         'projectsDirectory' =>  'src/it',
-    #         'cloneProjectsTo' =>  '${project.build.directory}/it',
-    #         'preBuildHookScript' =>  'setup.bsh',
-    #         'postBuildHookScript' =>  'verify.bsh',
-    #         'goals' => [:install],
-    #         'streamLogs' =>  'true' ) do
-    #   execute_goals( 'install', 'run',
-    #                  :id => 'integration-test' )
-    # end
-
-    # plugin 'org.eclipse.m2e:lifecycle-mapping:1.0.0'
-    # plugin :'scm-publish', '1.0-beta-2'
-  # end
-
-  # plugin( :site,
-  #         'port' =>  '9000',
-  #         'tempWebappDirectory' =>  '${basedir}/target/site/tempdir' ) do
-  #   execute_goals( 'stage',
-  #                  :id => 'stage-for-scm-publish',
-  #                  :phase => 'post-site',
-  #                  'skipDeploy' =>  'false' )
-  # end
-
-  # plugin( :'scm-publish', '1.0-beta-2',
-  #         'scmBranch' =>  'gh-pages',
-  #         'pubScmUrl' =>  'scm:git:git@github.com:jruby/jruby.git',
-  #         'tryUpdate' =>  'true' ) do
-  #   execute_goals( 'publish-scm',
-  #                  :id => 'scm-publish',
-  #                  :phase => 'site-deploy' )
-  # end
-
-
-  build do
-    default_goal 'install'
   end
 
-  # profile 'test' do
-  #   properties 'invoker.skip' => false
-  #   modules [ 'test' ]
-  # end
-  #
-  # [
-  #     'rake',
-  #     'exec',
-  #     'truffle-specs-language',
-  #     'truffle-specs-core',
-  #     'truffle-specs-library',
-  #     'truffle-specs-truffle',
-  #     'truffle-specs-language-report',
-  #     'truffle-specs-core-report',
-  #     'truffle-specs-library-report',
-  #     'truffle-test-pe',
-  #     'truffle-mri-tests'
-  # ].each do |name|
-  #   profile name do
-  #
-  #     modules [ 'test' ]
-  #
-  #     build do
-  #       default_goal 'package'
-  #     end
-  #   end
-  # end
-  #
-  # [ 'bootstrap', 'bootstrap-no-launcher' ].each do |name|
-  #   profile name do
-  #
-  #     modules [ 'test' ]
-  #
-  #   end
-  # end
-  #
-  # [ 'jruby-jars', 'main', 'complete', 'dist' ].each do |name|
-  #
-  #   profile name do
-  #
-  #     modules [ 'maven' ]
-  #
-  #     build do
-  #       default_goal 'install'
-  #       plugin_management do
-  #         plugin :surefire, '2.15', :skipTests => true
-  #       end
-  #     end
-  #   end
-  # end
-  #
-  # [ 'osgi', 'j2ee' ].each do |name|
-  #   profile name do
-  #
-  #     modules [ 'maven' ]
-  #
-  #     properties( 'invoker.skip' => false,
-  #                 "its.#{name}" => 'no-excludes/pom.xml' )
-  #
-  #     build do
-  #       default_goal 'install'
-  #       plugin :invoker, 'pomIncludes' => [ "#{name}*/pom.xml" ]
-  #     end
-  #   end
-  # end
-  #
-  # profile 'jruby_complete_jar_extended' do
-  #
-  #   modules [ 'test', 'maven' ]
-  #
-  #   build do
-  #     default_goal 'install'
-  #   end
-  # end
-  #
-  # all_modules = [ 'test', 'maven' ]
-  #
-  # profile 'all' do
-  #
-  #   modules all_modules
-  #
-  #   build do
-  #     default_goal 'install'
-  #   end
-  # end
-  #
-  # profile 'clean' do
-  #
-  #   modules all_modules
-  #
-  #   build do
-  #     default_goal 'clean'
-  #   end
-  # end
-  #
-  # profile 'release' do
-  #   modules [ 'test', 'maven' ]
-  #   properties 'invoker.skip' => true
-  # end
-  #
-  # profile 'snapshots' do
-  #   snapshots_dir = '/builds/snapshots'
-  #
-  #   properties 'snapshots.dir' => snapshots_dir
-  #   activation do
-  #     file( :exists => snapshots_dir )
-  #   end
-  #
-  #   distribution_management do
-  #     repository( :url => "file:#{snapshots_dir}/maven", :id => 'local releases' )
-  #     snapshot_repository( :url => "file:#{snapshots_dir}/maven",
-  #                          :id => 'local snapshots' )
-  #   end
-  #   build do
-  #     default_goal :deploy
-  #   end
-  # end
-  #
-  # profile 'single invoker test' do
-  #   activation do
-  #     property :name => 'invoker.test'
-  #   end
-  #   properties 'invoker.skip' => false
-  # end
-  #
-  # reporting do
-  #   plugin( :'project-info-reports', '2.4',
-  #           'dependencyLocationsEnabled' =>  'false',
-  #           'dependencyDetailsEnabled' =>  'false' )
-  #   plugin :changelog, '2.2'
-  #   plugin( :checkstyle, '2.9.1',
-  #           'configLocation' =>  '${main.basedir}/docs/style_checks.xml',
-  #           'propertyExpansion' =>  'cacheFile=${project.build.directory}/checkstyle-cachefile' ) do
-  #     report_set( 'checkstyle',
-  #                 :inherited => 'false' )
-  #   end
-  #
-  #   plugin( 'org.codehaus.mojo:cobertura-maven-plugin:2.5.1',
-  #           'aggregate' =>  'true' )
-  #   plugin :dependency, '2.8' do
-  #     report_set 'analyze-report'
-  #   end
-  #
-  #   plugin 'org.codehaus.mojo:findbugs-maven-plugin:2.5'
-  #   plugin( :javadoc, '2.9',
-  #           'quiet' =>  'true',
-  #           'aggregate' =>  'true',
-  #           'failOnError' =>  'false',
-  #           'detectOfflineLinks' =>  'false',
-  #           'show' =>  'package',
-  #           'level' =>  'package',
-  #           'maxmemory' =>  '1g' ) do
-  #     report_set( 'javadoc',
-  #                 'quiet' =>  'true',
-  #                 'failOnError' =>  'false',
-  #                 'detectOfflineLinks' =>  'false' )
-  #   end
-  #
-  #   plugin( :pmd, '2.7.1',
-  #           'linkXRef' =>  'true',
-  #           'sourceEncoding' =>  'utf-8',
-  #           'minimumTokens' =>  '100',
-  #           'targetJdk' =>  '${base.javac.version}' )
-  #   plugin( :jxr, '2.3',
-  #           'linkJavadoc' =>  'true',
-  #           'aggregate' =>  'true' )
-  #   plugin :'surefire-report', '2.14.1'
-  #   plugin( 'org.codehaus.mojo:taglist-maven-plugin:2.4',
-  #           'tagListOptions' => {
-  #               'tagClasses' => {
-  #                   'tagClass' => {
-  #                       'tags' => [ { 'matchString' =>  'todo',
-  #                                     'matchType' =>  'ignoreCase' },
-  #                                   { 'matchString' =>  'FIXME',
-  #                                     'matchType' =>  'ignoreCase' },
-  #                                   { 'matchString' =>  'deprecated',
-  #                                     'matchType' =>  'ignoreCase' } ]
-  #                   }
-  #               }
-  #           } )
-  #   plugin 'org.codehaus.mojo:versions-maven-plugin:2.1' do
-  #     report_set 'dependency-updates-report', 'plugin-updates-report', 'property-updates-report'
-  #   end
-  # end
+  build do
+    default_goal 'package'
+  end
+
 end

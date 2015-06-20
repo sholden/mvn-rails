@@ -1,0 +1,13 @@
+<p id="notice"><%= notice %></p>
+
+<dl>
+    <dt>Name</dt>
+    <dd><%= @person.name %></dd>
+    <dt>Greeting</dt>
+    <dd><%= @person.greeting %></dd>
+</dl>
+
+</p>
+
+<%= link_to 'Edit', edit_person_path(@person) %> |
+<%= link_to 'Back', people_path %>

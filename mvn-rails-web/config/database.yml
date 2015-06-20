@@ -48,5 +48,5 @@ test:
 production:
   <<: *default
   database: mvn-rails_production
-  username: mvn-rails
-  password: <%= ENV['MVN-RAILS_DATABASE_PASSWORD'] %>
+  username: root
+  password: <%= ENV['DATABASE_PASSWORD'] %>

@@ -9,7 +9,7 @@ Warbler::Config.new do |config|
   # - executable: embed a web server and make the war executable
   # - compiled: compile .rb files to .class files
   # config.features = %w(gemjar)
-  config.features = ['executable']
+  config.features = %w{executable}
 
   # Application directories to be included in the webapp.
   # config.dirs = %w(app config db lib log script vendor tmp)
@@ -147,7 +147,7 @@ Warbler::Config.new do |config|
   # * <tt>winstone</tt> (default) - Winstone 0.9.10 from sourceforge
   # * <tt>jenkins-ci.winstone</tt> - Improved Winstone from Jenkins CI
   # * <tt>jetty</tt> - Embedded Jetty from Eclipse
-  # config.webserver = 'jetty'
+  config.webserver = 'jetty'
 
   # Value of RAILS_ENV for the webapp -- default as shown below
   # config.webxml.rails.env = ENV['RAILS_ENV'] || 'production'
@@ -156,7 +156,7 @@ Warbler::Config.new do |config|
   # config.webxml.booter = :rails
 
   # Set JRuby to run in 1.9 mode.
-  # config.webxml.jruby.compat.version = "1.9"
+  config.webxml.jruby.compat.version = "2.0"
 
   # When using the :rack booter, "Rackup" script to use.
   # - For 'rackup.path', the value points to the location of the rackup

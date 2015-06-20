@@ -2,59 +2,56 @@ project 'mvn-rails-web' do
 
 
   id 'com.mvnrails:mvn-rails-web', '1.0-SNAPSHOT'
-  packaging 'jar'
+  packaging 'war'
 
   inherit 'com.mvnrails:mvn-rails', '1.0-SNAPSHOT'
 
   description 'A demo rails app using maven dependencies'
 
-  # gemfile
-  #
-  # jarfile
-
-
   properties( 'polyglot.dump.pom' => 'pom.xml',
-              'polyglot.dump.readonly' => true,
-              'jruby.plugins.version' => '1.0.9',
-              'jruby.version' => '1.7.20',
-              'gem.home' => '${session.executionRootDirectory}/target/rubygems',
-              'gem.path' => '${session.executionRootDirectory}/target/rubygems')
+              'polyglot.dump.readonly' => true)
 
+  gem 'bundler', '1.10.4'
+  gem 'warbler', '1.4.8'
   jarfile File.join(basedir, 'Jarfile')
   gemfile File.join(basedir, 'Gemfile')
 
-  build do
-    plugins do
-      plugin 'de.saumya.mojo:gem-maven-plugin:${jruby.plugins.version}' do
-        execute_goal 'initialize'
-      end
+  phase :initialize do
+    plugin 'de.saumya.mojo:jruby-maven-plugin:${jruby.plugins.version}' do
+      configuration(
+          'gemHome' =>  '${gem.home}',
+          'jrubySwitches' =>  '--2.0',
+          'jrubyVersion' =>  '${jruby.version}' )
 
-      # plugin 'de.saumya.mojo:jruby-maven-plugin' do
-      #   executions do
-      #     execution id: 'bundle-install', phase: 'initialize'
-      #     execution id: 'create-war', phase: 'compile'
-      #   end
-      # end
-
-      plugin 'de.saumya.mojo:jruby-maven-plugin:${jruby.plugins.version}' do
-        configuration(:jrubySwitches => '--2.0', jrubyVersion: '${jruby.version}')
-
-        execute_goal 'jruby' do
-          id 'bundle-install'
-          phase 'initialize'
-          configuration('args' => '-C ${basedir} -S ${gem.home}/bin/bundle install')
-        end
-
-        execute_goal 'jruby' do
-          id 'create-war'
-          phase 'package'
-          configuration('args' => '-C ${basedir}/src/main/ruby -S ${gem.home}/bin/warble')
-        end
-      end
+      execute_goals(:jruby, :id => 'bundle-install')
     end
-
-
   end
+
+  phase :package do
+    plugin 'de.saumya.mojo:jruby-maven-plugin:${jruby.plugins.version}' do
+      configuration(
+          'gemHome' =>  '${gem.home}',
+          'jrubySwitches' =>  '--2.0',
+          'jrubyVersion' =>  '${jruby.version}' )
+
+      execute_goals( 'jruby',
+                     :id => 'create-war',
+                     'args' =>  '-C ${basedir} -S bundle exec rake war' )
+      execute_goal( :jruby,
+                    :id => 'move war to maven build dir',
+                    :script => <<RUBY
+require 'fileutils'
+FileUtils.mv '${project.artifactId}.war', '${project.build.directory}/${project.build.finalName}.war'
+RUBY
+      )
+    end
+  end
+
+  plugin 'de.saumya.mojo:gem-maven-plugin:${jruby.plugins.version}' do
+    execute_goals 'initialize'
+  end
+
+  plugin :war, :failOnMissingWebXml => false
 
   # <dependencies>
   # <dependency>

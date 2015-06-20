@@ -8,18 +8,28 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
   <artifactId>mvn-rails-web</artifactId>
+  <packaging>war</packaging>
   <name>mvn-rails-web</name>
   <description>A demo rails app using maven dependencies</description>
   <properties>
-    <jruby.version>1.7.20</jruby.version>
     <polyglot.dump.readonly>true</polyglot.dump.readonly>
-    <gem.path>${session.executionRootDirectory}/target/rubygems</gem.path>
-    <gem.home>${session.executionRootDirectory}/target/rubygems</gem.home>
     <jruby.plugins.version>1.0.9</jruby.plugins.version>
     <polyglot.dump.pom>pom.xml</polyglot.dump.pom>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
+    <dependency>
+      <groupId>rubygems</groupId>
+      <artifactId>bundler</artifactId>
+      <version>1.10.4</version>
+      <type>gem</type>
+    </dependency>
+    <dependency>
+      <groupId>rubygems</groupId>
+      <artifactId>warbler</artifactId>
+      <version>1.4.8</version>
+      <type>gem</type>
+    </dependency>
     <dependency>
       <groupId>com.mvnrails</groupId>
       <artifactId>mvn-rails-java</artifactId>
@@ -47,6 +57,77 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>jruby-maven-plugin</artifactId>
+        <version>${jruby.plugins.version}</version>
+        <executions>
+          <execution>
+            <id>bundle-install</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>jruby</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <gemHome>${gem.home}</gemHome>
+          <jrubySwitches>--2.0</jrubySwitches>
+          <jrubyVersion>${jruby.version}</jrubyVersion>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>jruby-maven-plugin</artifactId>
+        <version>${jruby.plugins.version}</version>
+        <executions>
+          <execution>
+            <id>create-war</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jruby</goal>
+            </goals>
+            <configuration>
+              <args>-C ${basedir} -S bundle exec rake war</args>
+            </configuration>
+          </execution>
+          <execution>
+            <id>move war to maven build dir</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jruby</goal>
+            </goals>
+            <configuration>
+              <script>require 'fileutils'
+FileUtils.mv '${project.artifactId}.war', '${project.build.directory}/${project.build.finalName}.war'
+</script>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <gemHome>${gem.home}</gemHome>
+          <jrubySwitches>--2.0</jrubySwitches>
+          <jrubyVersion>${jruby.version}</jrubyVersion>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>gem-maven-plugin</artifactId>
+        <version>${jruby.plugins.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>initialize</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <profiles>
@@ -61,6 +142,12 @@
         <dependency>
           <groupId>rubygems</groupId>
           <artifactId>jbundler</artifactId>
+          <version>[0,)</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>bundler</artifactId>
           <version>[0,)</version>
           <type>gem</type>
         </dependency>
@@ -190,7 +277,7 @@
                     <rails-deprecated_sanitizer>1.0.3</rails-deprecated_sanitizer>
                     <rails-html-sanitizer>1.0.2</rails-html-sanitizer>
                     <loofah>2.0.2</loofah>
-                    <rack>1.6.2</rack>
+                    <rack>1.6.4</rack>
                     <rack-test>0.6.3</rack-test>
                     <activejob>4.2.2</activejob>
                     <globalid>0.3.5</globalid>
