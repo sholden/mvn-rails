@@ -36,7 +36,7 @@ project 'mvn-rails-web' do
 
       execute_goals( 'jruby',
                      :id => 'create-war',
-                     'args' =>  '-C ${basedir} -S bundle exec rake war' )
+                     'args' =>  '-C ${basedir} -S rake war' )
       execute_goal( :jruby,
                     :id => 'move war to maven build dir',
                     :script => <<RUBY

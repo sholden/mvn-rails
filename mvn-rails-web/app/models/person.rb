@@ -7,6 +7,6 @@ class Person < ActiveRecord::Base
 
   # @return [com.mvnrails.HelloFactory]
   def self.hello_factory
-    @hello_factory ||= Spring.bean('helloFactory')
+    @hello_factory ||= Beans.bean('helloFactory')
   end
 end

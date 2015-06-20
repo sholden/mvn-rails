@@ -1,4 +1,4 @@
-module Spring
+module Beans
   @mutex = Mutex.new
 
   def self.bean(name)
