@@ -1,5 +1,12 @@
 class Person < ActiveRecord::Base
   def greeting
-    com.mvnrails.Hello.new(name).greeting
+    self.class.hello_factory.create_hello(name).greeting
+  end
+
+  private
+
+  # @return [com.mvnrails.HelloFactory]
+  def self.hello_factory
+    @hello_factory ||= Spring.bean('helloFactory')
   end
 end

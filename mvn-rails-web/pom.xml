@@ -31,9 +31,44 @@
       <type>gem</type>
     </dependency>
     <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>4.1.6.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>4.1.6.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>4.1.6.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>aopalliance</groupId>
+      <artifactId>aopalliance</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-expression</artifactId>
+      <version>4.1.6.RELEASE</version>
+    </dependency>
+    <dependency>
       <groupId>com.mvnrails</groupId>
       <artifactId>mvn-rails-java</artifactId>
       <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+      <version>4.1.6.RELEASE</version>
     </dependency>
   </dependencies>
   <repositories>
@@ -213,6 +248,18 @@ FileUtils.mv '${project.artifactId}.war', '${project.build.directory}/${project.
         </dependency>
         <dependency>
           <groupId>rubygems</groupId>
+          <artifactId>trinidad</artifactId>
+          <version>[0,)</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>trinidad_jbundler_extension</artifactId>
+          <version>[0,)</version>
+          <type>gem</type>
+        </dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
           <artifactId>warbler</artifactId>
           <version>[0,)</version>
           <type>gem</type>
@@ -310,6 +357,10 @@ FileUtils.mv '${project.artifactId}.war', '${project.build.directory}/${project.
                     <multi_json>1.11.1</multi_json>
                     <sdoc>0.4.1</sdoc>
                     <rdoc>4.2.0</rdoc>
+                    <trinidad>1.4.6</trinidad>
+                    <jruby-rack>1.1.18</jruby-rack>
+                    <trinidad_jars>1.4.1</trinidad_jars>
+                    <trinidad_jbundler_extension>0.2.0</trinidad_jbundler_extension>
                     <tzinfo-data>1.2015.5</tzinfo-data>
                   </gems>
                 </configuration>
@@ -325,7 +376,6 @@ FileUtils.mv '${project.artifactId}.war', '${project.build.directory}/${project.
                   <gems>
                     <warbler>1.4.8</warbler>
                     <jruby-jars>1.7.20.1</jruby-jars>
-                    <jruby-rack>1.1.18</jruby-rack>
                     <rubyzip>1.1.7</rubyzip>
                   </gems>
                 </configuration>
